@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { Mail, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { Field, PrimaryButton } from "@/components/auth/AuthForm";
@@ -8,10 +8,10 @@ import { Field, PrimaryButton } from "@/components/auth/AuthForm";
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({
     meta: [
-      { title: "Reset your password — Nebula Auth" },
-      { name: "description", content: "Securely reset your password with a magic link." },
-      { property: "og:title", content: "Reset your password — Nebula Auth" },
-      { property: "og:description", content: "Reset your password — beautiful animated auth template." },
+      { title: "Recover passphrase — The Ledger" },
+      { name: "description", content: "Recover access to your account with a secure link." },
+      { property: "og:title", content: "Recover passphrase — The Ledger" },
+      { property: "og:description", content: "Reset your passphrase to The Ledger." },
     ],
   }),
   component: ForgotPage,
@@ -32,10 +32,11 @@ function ForgotPage() {
 
   return (
     <AuthLayout
-      title="Reset your password"
-      subtitle="Enter the email tied to your account and we'll send a secure reset link."
+      title="Misplaced your passphrase?"
+      subtitle="Enter your address and we will dispatch a single-use link by post — er, by email."
+      kicker="Lost & Found"
       footer={
-        <Link to="/" className="inline-flex items-center gap-1.5 font-medium text-primary hover:underline">
+        <Link to="/" className="inline-flex items-center gap-1.5 font-semibold uppercase tracking-wider text-ink ink-underline ink-underline-hover">
           <ArrowLeft className="size-3.5" />
           Back to sign in
         </Link>
@@ -45,25 +46,27 @@ function ForgotPage() {
         {sent ? (
           <motion.div
             key="sent"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center text-center py-4"
+            className="border border-ink/20 bg-paper-deep/60 p-6"
           >
-            <div className="relative mb-4">
-              <div className="absolute inset-0 animate-pulse-glow rounded-full bg-primary/40 blur-xl" />
-              <CheckCircle2 className="relative size-14 text-primary" />
+            <div className="flex items-start gap-4">
+              <CheckCircle2 className="size-8 text-accent shrink-0 mt-0.5" />
+              <div>
+                <p className="font-display text-[10px] uppercase tracking-[0.3em] text-ink/60">Dispatched</p>
+                <h3 className="mt-1 font-display text-2xl uppercase">Check your inbox.</h3>
+                <p className="mt-2 text-sm text-ink-soft leading-relaxed">
+                  A reset link is on its way. Click it within 30 minutes to set a new passphrase.
+                </p>
+                <button
+                  onClick={() => setSent(false)}
+                  className="mt-4 text-xs font-semibold uppercase tracking-wider text-ink ink-underline ink-underline-hover"
+                >
+                  Resend link
+                </button>
+              </div>
             </div>
-            <h3 className="font-display text-xl font-semibold">Check your inbox</h3>
-            <p className="mt-1.5 text-sm text-muted-foreground max-w-xs">
-              We've sent a password reset link. Click it to choose a new password.
-            </p>
-            <button
-              onClick={() => setSent(false)}
-              className="mt-5 text-sm text-primary hover:underline"
-            >
-              Resend link
-            </button>
           </motion.div>
         ) : (
           <motion.form
@@ -72,18 +75,18 @@ function ForgotPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onSubmit={onSubmit}
-            className="space-y-4"
+            className="space-y-7"
           >
             <Field
-              label="Email"
+              label="Email address"
+              index="01"
               type="email"
               autoComplete="email"
-              placeholder="you@studio.com"
-              icon={<Mail className="size-4" />}
+              placeholder="reader@theledger.co"
               required
             />
             <PrimaryButton type="submit" loading={loading}>
-              Send reset link
+              Dispatch reset link
             </PrimaryButton>
           </motion.form>
         )}

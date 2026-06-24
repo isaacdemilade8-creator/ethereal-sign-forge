@@ -2,6 +2,13 @@
 @source "../src";
 @import "tw-animate-css";
 
+@import "@fontsource/archivo-black/400.css";
+@import "@fontsource/hind/300.css";
+@import "@fontsource/hind/400.css";
+@import "@fontsource/hind/500.css";
+@import "@fontsource/hind/600.css";
+@import "@fontsource/hind/700.css";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -13,6 +20,10 @@
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -30,110 +41,117 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-glow: var(--glow);
-  --color-glow-soft: var(--glow-soft);
 
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Archivo Black", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Hind", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 0.25rem;
 
-  /* Deep cosmic navy base */
-  --background: oklch(0.16 0.035 265);
-  --foreground: oklch(0.97 0.01 250);
+  /* Paper & Ink — editorial magazine */
+  --paper: oklch(0.965 0.008 80);          /* #f5f3ee */
+  --paper-deep: oklch(0.92 0.012 80);      /* #e8e4dd */
+  --ink: oklch(0.13 0 0);                  /* #0d0d0d */
+  --ink-soft: oklch(0.28 0 0);             /* #2d2d2d */
 
-  --card: oklch(0.22 0.04 265 / 0.55);
-  --card-foreground: oklch(0.97 0.01 250);
+  --background: var(--paper);
+  --foreground: var(--ink);
 
-  --popover: oklch(0.2 0.04 265);
-  --popover-foreground: oklch(0.97 0.01 250);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
 
-  /* Electric cyan primary */
-  --primary: oklch(0.82 0.18 200);
-  --primary-foreground: oklch(0.16 0.04 265);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
 
-  --secondary: oklch(0.28 0.05 270);
-  --secondary-foreground: oklch(0.97 0.01 250);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
 
-  --muted: oklch(0.26 0.04 265);
-  --muted-foreground: oklch(0.72 0.03 255);
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
 
-  --accent: oklch(0.7 0.22 320);
-  --accent-foreground: oklch(0.97 0.01 250);
+  --muted: var(--paper-deep);
+  --muted-foreground: oklch(0.45 0.005 80);
 
-  --destructive: oklch(0.65 0.24 25);
-  --destructive-foreground: oklch(0.98 0.01 0);
+  --accent: oklch(0.65 0.22 32);           /* rare red ink accent */
+  --accent-foreground: var(--paper);
 
-  --border: oklch(1 0 0 / 0.1);
-  --input: oklch(1 0 0 / 0.08);
-  --ring: oklch(0.82 0.18 200 / 0.6);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
 
-  --glow: oklch(0.82 0.18 200);
-  --glow-soft: oklch(0.7 0.22 320);
-
-  --gradient-primary: linear-gradient(135deg, oklch(0.82 0.18 200), oklch(0.7 0.22 320));
-  --gradient-radial: radial-gradient(circle at 30% 20%, oklch(0.7 0.22 320 / 0.35), transparent 55%),
-                     radial-gradient(circle at 80% 80%, oklch(0.82 0.18 200 / 0.3), transparent 55%);
-  --shadow-glow: 0 0 40px -8px oklch(0.82 0.18 200 / 0.5), 0 0 80px -20px oklch(0.7 0.22 320 / 0.35);
-  --shadow-card: 0 30px 80px -20px oklch(0.05 0.04 265 / 0.7);
+  --border: oklch(0.13 0 0 / 0.14);
+  --input: oklch(0.13 0 0 / 0.06);
+  --ring: oklch(0.13 0 0 / 0.6);
 }
 
 @layer base {
   * { border-color: var(--color-border); }
   html, body { height: 100%; }
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--color-paper);
+    color: var(--color-ink);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
 }
 
-@utility glass-card {
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--card) 85%, transparent),
-    color-mix(in oklab, var(--card) 60%, transparent)
-  );
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
-  box-shadow: var(--shadow-card);
+/* Subtle paper grain */
+@utility paper-grain {
+  position: relative;
+}
+@utility paper-grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image:
+    radial-gradient(oklch(0.13 0 0 / 0.04) 1px, transparent 1px),
+    radial-gradient(oklch(0.13 0 0 / 0.03) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 2px;
 }
 
-@utility gradient-text {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+@utility rule-thick {
+  border-top: 2px solid var(--color-ink);
+}
+@utility rule-hair {
+  border-top: 1px solid var(--color-ink);
 }
 
-@utility glow-ring {
-  box-shadow: var(--shadow-glow);
+@utility ink-underline {
+  background-image: linear-gradient(var(--color-ink), var(--color-ink));
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  transition: background-size 300ms ease;
+}
+@utility ink-underline-hover {
+  &:hover {
+    background-size: 100% 2px;
+  }
 }
 
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50%      { transform: translateY(-14px) rotate(3deg); }
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.55; transform: scale(1); }
-  50%      { opacity: 0.9;  transform: scale(1.04); }
+@keyframes slow-spin {
+  to { transform: rotate(360deg); }
 }
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
+@keyframes ink-blot {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50%      { transform: scale(1.04) rotate(2deg); }
 }
 
-@utility animate-float-slow { animation: float-slow 7s ease-in-out infinite; }
-@utility animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
-@utility animate-shimmer    { animation: shimmer 2.4s linear infinite; }
-@utility animate-gradient   { background-size: 200% 200%; animation: gradient-shift 8s ease infinite; }
+@utility animate-marquee  { animation: marquee 38s linear infinite; }
+@utility animate-slow-spin { animation: slow-spin 26s linear infinite; }
+@utility animate-ink-blot  { animation: ink-blot 9s ease-in-out infinite; }

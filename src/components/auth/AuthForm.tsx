@@ -1,51 +1,58 @@
 import { motion } from "motion/react";
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 import { forwardRef, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ArrowRight } from "lucide-react";
 
 interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  icon?: ReactNode;
+  index?: string;
   error?: string;
 }
 
 export const Field = forwardRef<HTMLInputElement, FieldProps>(
-  ({ label, icon, error, type = "text", className = "", ...props }, ref) => {
+  ({ label, index, error, type = "text", className = "", ...props }, ref) => {
     const [show, setShow] = useState(false);
+    const [focused, setFocused] = useState(false);
     const isPassword = type === "password";
     const actualType = isPassword && show ? "text" : type;
 
     return (
-      <div className="space-y-1.5">
-        <label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          {label}
-        </label>
-        <div
-          className={`group relative flex items-center rounded-xl border border-border bg-input/40 transition-all focus-within:border-primary/60 focus-within:bg-input/60 focus-within:shadow-[0_0_0_4px_color-mix(in_oklab,var(--primary)_15%,transparent)] ${className}`}
-        >
-          {icon && (
-            <span className="pl-3.5 text-muted-foreground transition-colors group-focus-within:text-primary">
-              {icon}
-            </span>
-          )}
-          <input
-            ref={ref}
-            type={actualType}
-            className="w-full bg-transparent px-3.5 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
-            {...props}
-          />
+      <div className={`group relative ${className}`}>
+        <div className="flex items-baseline justify-between mb-1">
+          <label className="flex items-baseline gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-soft">
+            {index && <span className="font-display text-ink/40">{index}</span>}
+            <span>{label}</span>
+          </label>
           {isPassword && (
             <button
               type="button"
               onClick={() => setShow((s) => !s)}
-              className="pr-3.5 text-muted-foreground hover:text-foreground transition-colors"
+              className="text-[10px] uppercase tracking-widest text-ink/50 hover:text-ink flex items-center gap-1"
               tabIndex={-1}
             >
-              {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              {show ? <EyeOff className="size-3" /> : <Eye className="size-3" />}
+              {show ? "Hide" : "Show"}
             </button>
           )}
         </div>
-        {error && <p className="text-xs text-destructive">{error}</p>}
+        <div className="relative">
+          <input
+            ref={ref}
+            type={actualType}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            className="w-full bg-transparent border-0 border-b border-ink/30 px-0 py-2.5 text-[15px] text-ink placeholder:text-ink/30 focus:outline-none font-sans"
+            {...props}
+          />
+          <motion.span
+            initial={false}
+            animate={{ scaleX: focused ? 1 : 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            style={{ transformOrigin: "left" }}
+            className="absolute bottom-0 left-0 h-[2px] w-full bg-ink"
+          />
+        </div>
+        {error && <p className="mt-1.5 text-xs text-destructive">{error}</p>}
       </div>
     );
   },
@@ -59,20 +66,20 @@ interface PrimaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function PrimaryButton({ children, loading, className = "", ...props }: PrimaryButtonProps) {
   return (
     <motion.button
-      whileHover={{ scale: 1.015 }}
-      whileTap={{ scale: 0.985 }}
+      whileHover={{ scale: 1.005 }}
+      whileTap={{ scale: 0.99 }}
       disabled={loading || props.disabled}
       onClick={props.onClick}
       type={props.type}
-      className={`group relative w-full overflow-hidden rounded-xl px-4 py-3 text-sm font-semibold text-primary-foreground transition-all disabled:opacity-60 ${className}`}
-      style={{ background: "var(--gradient-primary)", boxShadow: "var(--shadow-glow)" }}
+      className={`group relative w-full overflow-hidden bg-ink text-paper py-4 px-5 font-display text-[15px] uppercase tracking-[0.15em] disabled:opacity-60 ${className}`}
     >
-      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-      <span className="relative flex items-center justify-center gap-2">
+      <span className="absolute inset-0 -translate-x-full bg-accent transition-transform duration-500 ease-out group-hover:translate-x-0" />
+      <span className="relative flex items-center justify-between gap-2">
+        <span>{loading ? "Sending…" : children}</span>
         {loading ? (
-          <span className="size-4 animate-spin rounded-full border-2 border-primary-foreground/40 border-t-primary-foreground" />
+          <span className="size-3.5 animate-spin rounded-full border-2 border-paper/30 border-t-paper" />
         ) : (
-          children
+          <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
         )}
       </span>
     </motion.button>
@@ -88,10 +95,10 @@ export function SocialButton({
 }) {
   return (
     <motion.button
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.97 }}
+      whileHover={{ y: -1 }}
+      whileTap={{ scale: 0.98 }}
       type="button"
-      className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-input/40 px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-input/70"
+      className="flex flex-1 items-center justify-center gap-2 border border-ink/25 bg-transparent px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-ink transition-colors hover:bg-ink hover:text-paper"
     >
       {icon}
       <span className="hidden sm:inline">{provider}</span>
@@ -101,10 +108,10 @@ export function SocialButton({
 
 export function Divider({ children }: { children: ReactNode }) {
   return (
-    <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-muted-foreground">
-      <div className="h-px flex-1 bg-border" />
-      <span>{children}</span>
-      <div className="h-px flex-1 bg-border" />
+    <div className="my-7 flex items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-ink/50">
+      <div className="h-px flex-1 bg-ink/20" />
+      <span className="font-semibold">{children}</span>
+      <div className="h-px flex-1 bg-ink/20" />
     </div>
   );
 }

@@ -1,35 +1,33 @@
 import { Suspense, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, Environment, Sparkles } from "@react-three/drei";
-import type { Mesh } from "three";
+import { Float } from "@react-three/drei";
+import type { Group, Mesh } from "three";
 
-function MorphingOrb() {
-  const ref = useRef<Mesh>(null);
+function InkSculpture() {
+  const group = useRef<Group>(null);
   useFrame((state) => {
-    if (!ref.current) return;
+    if (!group.current) return;
     const t = state.clock.getElapsedTime();
-    ref.current.rotation.x = t * 0.15;
-    ref.current.rotation.y = t * 0.2;
+    group.current.rotation.y = t * 0.18;
+    group.current.rotation.x = Math.sin(t * 0.3) * 0.15;
   });
   return (
-    <Float speed={1.4} rotationIntensity={0.6} floatIntensity={1.2}>
-      <mesh ref={ref} position={[0, 0, 0]} scale={1.7}>
-        <icosahedronGeometry args={[1, 32]} />
-        <MeshDistortMaterial
-          color="#22d3ee"
-          emissive="#0891b2"
-          emissiveIntensity={0.4}
-          roughness={0.15}
-          metalness={0.85}
-          distort={0.45}
-          speed={2.2}
-        />
+    <group ref={group}>
+      {/* Wireframe icosahedron — ink lines */}
+      <mesh scale={1.6}>
+        <icosahedronGeometry args={[1, 1]} />
+        <meshBasicMaterial color="#0d0d0d" wireframe wireframeLinewidth={1} />
       </mesh>
-    </Float>
+      {/* Inner solid paper-toned core */}
+      <mesh scale={1.05}>
+        <icosahedronGeometry args={[1, 0]} />
+        <meshBasicMaterial color="#f5f3ee" />
+      </mesh>
+    </group>
   );
 }
 
-function AccentTorus() {
+function OrbitingRing() {
   const ref = useRef<Mesh>(null);
   useFrame((state) => {
     if (!ref.current) return;
@@ -38,43 +36,30 @@ function AccentTorus() {
     ref.current.rotation.z = t * 0.25;
   });
   return (
-    <Float speed={1} rotationIntensity={0.4} floatIntensity={0.8}>
-      <mesh ref={ref} position={[2.4, -1.4, -0.5]} scale={0.55}>
-        <torusKnotGeometry args={[1, 0.32, 160, 24]} />
-        <meshStandardMaterial
-          color="#d946ef"
-          emissive="#a21caf"
-          emissiveIntensity={0.5}
-          roughness={0.25}
-          metalness={0.9}
-        />
+    <Float speed={0.8} rotationIntensity={0.3} floatIntensity={0.6}>
+      <mesh ref={ref} position={[0, 0, 0]} scale={2.4}>
+        <torusGeometry args={[1, 0.012, 6, 120]} />
+        <meshBasicMaterial color="#0d0d0d" />
       </mesh>
     </Float>
   );
 }
 
-function FloatingCube() {
+function OrbitingDot() {
   const ref = useRef<Mesh>(null);
   useFrame((state) => {
     if (!ref.current) return;
     const t = state.clock.getElapsedTime();
-    ref.current.rotation.x = t * 0.3;
-    ref.current.rotation.y = t * 0.5;
+    const r = 2.4;
+    ref.current.position.x = Math.cos(t * 0.5) * r;
+    ref.current.position.z = Math.sin(t * 0.5) * r;
+    ref.current.position.y = Math.sin(t * 0.7) * 0.4;
   });
   return (
-    <Float speed={1.6} rotationIntensity={0.8} floatIntensity={1.4}>
-      <mesh ref={ref} position={[-2.6, 1.6, -0.8]} scale={0.4}>
-        <octahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial
-          color="#a78bfa"
-          emissive="#7c3aed"
-          emissiveIntensity={0.6}
-          roughness={0.1}
-          metalness={1}
-          wireframe
-        />
-      </mesh>
-    </Float>
+    <mesh ref={ref} scale={0.08}>
+      <sphereGeometry args={[1, 16, 16]} />
+      <meshBasicMaterial color="#c44a2a" />
+    </mesh>
   );
 }
 
@@ -87,14 +72,9 @@ export function AuthScene() {
       style={{ background: "transparent" }}
     >
       <Suspense fallback={null}>
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} color="#a5f3fc" />
-        <pointLight position={[-5, -3, -2]} intensity={1.5} color="#f0abfc" />
-        <MorphingOrb />
-        <AccentTorus />
-        <FloatingCube />
-        <Sparkles count={60} scale={8} size={2} speed={0.4} color="#67e8f9" />
-        <Environment preset="city" />
+        <InkSculpture />
+        <OrbitingRing />
+        <OrbitingDot />
       </Suspense>
     </Canvas>
   );
