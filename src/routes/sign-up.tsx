@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { Mail, Lock, User } from "lucide-react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { Field, PrimaryButton, SocialButton, Divider } from "@/components/auth/AuthForm";
 import { GoogleIcon, GitHubIcon, AppleIcon } from "@/components/auth/icons";
@@ -8,10 +7,10 @@ import { GoogleIcon, GitHubIcon, AppleIcon } from "@/components/auth/icons";
 export const Route = createFileRoute("/sign-up")({
   head: () => ({
     meta: [
-      { title: "Create your account — Nebula Auth" },
-      { name: "description", content: "Sign up for a new account with a beautifully animated auth template." },
-      { property: "og:title", content: "Create your account — Nebula Auth" },
-      { property: "og:description", content: "Reusable 3D-animated sign up template." },
+      { title: "Register — The Ledger" },
+      { name: "description", content: "Open a new account. Editorial, magazine-style auth template." },
+      { property: "og:title", content: "Register — The Ledger" },
+      { property: "og:description", content: "Open an account to The Ledger." },
     ],
   }),
   component: SignUpPage,
@@ -28,58 +27,60 @@ function SignUpPage() {
 
   return (
     <AuthLayout
-      title="Create your account"
-      subtitle="Start building in under a minute — no credit card required."
+      title="Open your account."
+      subtitle="A signature, an address, and a passphrase. Three lines and you are on the masthead."
+      kicker="Subscriptions Office"
       footer={
         <>
-          Already a member?{" "}
-          <Link to="/" className="font-medium text-primary hover:underline">
+          Already on the masthead?{" "}
+          <Link to="/" className="font-semibold text-ink ink-underline ink-underline-hover">
             Sign in
           </Link>
         </>
       }
     >
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-7">
         <Field
           label="Full name"
+          index="01"
           autoComplete="name"
           placeholder="Ada Lovelace"
-          icon={<User className="size-4" />}
           required
         />
         <Field
-          label="Email"
+          label="Email address"
+          index="02"
           type="email"
           autoComplete="email"
-          placeholder="you@studio.com"
-          icon={<Mail className="size-4" />}
+          placeholder="reader@theledger.co"
           required
         />
         <Field
-          label="Password"
+          label="Passphrase"
+          index="03"
           type="password"
           autoComplete="new-password"
-          placeholder="At least 8 characters"
-          icon={<Lock className="size-4" />}
+          placeholder="At least eight characters"
           minLength={8}
           required
         />
 
-        <label className="flex items-start gap-2 text-xs text-muted-foreground select-none">
-          <input type="checkbox" className="mt-0.5 size-4 rounded border-border bg-input accent-primary" required />
+        <label className="flex items-start gap-2.5 text-xs text-ink-soft select-none leading-relaxed">
+          <input type="checkbox" className="mt-0.5 size-3.5 rounded-none border border-ink accent-ink" required />
           <span>
             I agree to the{" "}
-            <a className="text-primary hover:underline" href="#">Terms of Service</a> and{" "}
-            <a className="text-primary hover:underline" href="#">Privacy Policy</a>.
+            <a className="font-semibold text-ink ink-underline ink-underline-hover" href="#">Terms</a> and{" "}
+            <a className="font-semibold text-ink ink-underline ink-underline-hover" href="#">Privacy Notice</a>,
+            printed in this edition.
           </span>
         </label>
 
         <PrimaryButton type="submit" loading={loading}>
-          Create account
+          File my registration
         </PrimaryButton>
       </form>
 
-      <Divider>or sign up with</Divider>
+      <Divider>or via syndicate</Divider>
 
       <div className="flex gap-2">
         <SocialButton provider="Google" icon={<GoogleIcon />} />
