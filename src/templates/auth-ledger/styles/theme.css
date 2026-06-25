@@ -1,0 +1,63 @@
+/* ============================================================
+ * Auth Ledger — drop-in theme tokens, utilities & fonts.
+ * Import this ONCE from your global stylesheet, e.g.:
+ *
+ *   @import "tailwindcss";
+ *   @import "./templates/auth-ledger/styles/theme.css";
+ *
+ * Requires Tailwind v4 (uses @theme / @utility) and these npm packages:
+ *   bun add @fontsource/archivo-black @fontsource/hind \
+ *           motion lucide-react three @react-three/fiber @react-three/drei
+ * ============================================================ */
+
+@import "@fontsource/archivo-black/400.css";
+@import "@fontsource/hind/300.css";
+@import "@fontsource/hind/400.css";
+@import "@fontsource/hind/500.css";
+@import "@fontsource/hind/600.css";
+@import "@fontsource/hind/700.css";
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-accent: var(--accent);
+  --color-destructive: var(--destructive);
+
+  --font-display: "Archivo Black", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Hind", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --paper: oklch(0.965 0.008 80);
+  --paper-deep: oklch(0.92 0.012 80);
+  --ink: oklch(0.13 0 0);
+  --ink-soft: oklch(0.28 0 0);
+  --accent: oklch(0.65 0.22 32);
+  --destructive: oklch(0.55 0.22 25);
+}
+
+@utility paper-grain { position: relative; }
+@utility paper-grain-overlay {
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: 0.5; mix-blend-mode: multiply;
+  background-image:
+    radial-gradient(oklch(0.13 0 0 / 0.04) 1px, transparent 1px),
+    radial-gradient(oklch(0.13 0 0 / 0.03) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 2px;
+}
+@utility ink-underline {
+  background-image: linear-gradient(var(--color-ink), var(--color-ink));
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  transition: background-size 300ms ease;
+}
+@utility ink-underline-hover { &:hover { background-size: 100% 2px; } }
+
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes ink-blot { 0%,100% { transform: scale(1) rotate(0); } 50% { transform: scale(1.04) rotate(2deg); } }
+@utility animate-marquee { animation: marquee 38s linear infinite; }
+@utility animate-ink-blot { animation: ink-blot 9s ease-in-out infinite; }
